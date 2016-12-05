@@ -1,0 +1,6 @@
+ata0-master: type=cdrom, path=qemu/kudos.iso, status=inserted
+ata0-slave: type=disk, mode=flat, path=store.file
+boot: cdrom
+#gdbstub: enabled=1, port=1234
+#display_library: x, options="gui_debug"
+memory: guest=256, host=256

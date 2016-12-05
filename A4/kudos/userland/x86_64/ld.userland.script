@@ -1,0 +1,11 @@
+ENTRY(_start)
+OUTPUT_FORMAT("elf64-x86-64")
+SECTIONS
+{
+    /* Group into two segments, RO and RW. See proc/elf.h for notes. */
+    . = 0xFFFF800000000000;
+    ro_segment  ALIGN(0x1000): { *(.text .rodata .rodata.*) }
+    rw_segment  ALIGN(0x1000): { *(.data .bss COMMON) }
+
+    BINARY_ENDS_HERE = .;
+}
