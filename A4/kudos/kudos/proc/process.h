@@ -34,4 +34,11 @@ int process_write(int filehandle, const void *buffer, int length);
 /// Returns the process ID of the new process.
 pid_t process_spawn(char const* executable, int flags);
 
+/// Stop the current process and the kernel thread in which it runs
+/// Argument: return value
+void process_exit(int retval);
+/// Wait for the given process to terminate, return its return value,
+/// and mark the process-table entry as free
+int process_join(process_id_t pid);
+
 #endif // KUDOS_PROC_PROCESS_H
