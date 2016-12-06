@@ -25,6 +25,7 @@
 #include "proc/process.h"
 #include "proc/fdt.h"
 #include "vm/memory.h"
+#include "proc/usr_sem.h"
 
 /**
  * Fallback function for system startup. This function is executed
@@ -95,6 +96,9 @@ void init_startup_thread(uint32_t arg)
 
   kprintf("Initializing the process table\n");
   process_init();
+  
+  kprintf("Initializing user semaphores\n")
+  usr_sem_init();
 
   if(bootargs_get("initprog") == NULL) {
     kprintf("No initial program (initprog), dropping to fallback\n");
