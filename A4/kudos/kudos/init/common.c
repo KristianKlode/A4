@@ -97,7 +97,7 @@ void init_startup_thread(uint32_t arg)
   kprintf("Initializing the process table\n");
   process_init();
   
-  kprintf("Initializing user semaphores\n")
+  kprintf("Initializing user semaphores\n");
   usr_sem_init();
 
   if(bootargs_get("initprog") == NULL) {

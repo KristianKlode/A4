@@ -30,24 +30,29 @@ void usr_sem_init() {
   klock_init(&usr_sem_table_lock);
   for (i = 0; i < USR_SEM_MAX_SEMS; ++i) {
     klock_init(&usr_sem_table[i].klock);
-    usr_sem_table_lock[i].value = -1;
-    usr_sem_table_lock[i].maxvalue = -1;
-    usr_sem_table_lock[i].name = "";
-    usr_sem_table_lock[i].creator = -1;
+    usr_sem_table[i].value = -1;
+    usr_sem_table[i].maxvalue = -1;
+    usr_sem_table[i].name = "";
+    usr_sem_table[i].ksem = -1;
   }
 }
 
-
-
-
 usr_sem_t* usr_sem_open(const char* name, int value){
+    if (value < 0){
+      for (i = 0; i < USR_SEM_MAX_SEMS; ++i) {
+        if(usr_sem_table[i].name == ""){
+          return &usr_sem_table[i];
+        }
+      return NULL
+      }
+    }
     for (i = 0; i < USR_SEM_MAX_SEMS; ++i) {
       if(usr_sem_table[i].name == ""){
         klock_status_t status = klock_lock(&usr_sem_table_lock);
         usr_sem_table[i].value = value;
         usr_sem_table[i].maxvalue = value;
         usr_sem_table[i].name = name;
-        usr_sem_table[i].creator = thread_get_current_thread();
+        usr_sem_table[i].ksem = SYSCALL_SEM_OPEN(value);
         klock_open(status, &usr_sem_table_lock);
         return &usr_sem_table[i];
       }
@@ -61,10 +66,31 @@ int usr_sem_close(usr_sem_t* sem){
   }
   klock_init(&usr_sem_table[i].klock);
   klock_status_t status = klock_lock(&usr_sem_table_lock);
+  SYSCALL_SEM_CLOSE(sem->ksem);
   sem->value = -1;
   sem->maxvalue = -1;
   sem->name = "";
-  sem->creator = -1;
+  sem->ksem = -1;
   klock_open(status, &usr_sem_table_lock);
-  return &usr_sem_table[i];
+  return 0;
 }
+
+int usr_sem_p(usr_sem_t* sem){
+  if(sem->value<1){
+    return -2;
+  }
+  sem->value = sem->value -1;
+  SYSCALL_SEM_P(sem->ksem);
+  return 0;
+}
+
+int usr_sem_v(usr_sem_t* sem){
+  if(sem->value > (sem->maxvalue-1)){
+    return -3;
+  }
+  sem->value = sem->value +1;
+  SYSCALL_SEM_V(sem->ksem);
+  return 0;
+}
+
+

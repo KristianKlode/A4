@@ -16,7 +16,7 @@ typedef struct {
   int value;
   int maxvalue;
   char name;
-  TID_t creator;
+  semaphore_t ksem;
 } usr_sem_t;
 
 #endif // KUDOS_PROC_USR_SEM_H

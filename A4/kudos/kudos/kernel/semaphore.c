@@ -8,6 +8,7 @@
 #include "kernel/config.h"
 #include "kernel/assert.h"
 #include "lib/libc.h"
+#include "proc/usr_sem.h"
 
 /** @name Semaphores
  *
@@ -151,4 +152,3 @@ void semaphore_V(semaphore_t *sem)
   spinlock_release(&sem->slock);
   _interrupt_set_state(intr_status);
 }
-
