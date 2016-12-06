@@ -284,6 +284,9 @@ void process_exit(int retval){
   pid_t pid = process_get_current_process();
   process_table[pid].state = PROCESS_ZOMBIE;
   process_table[pid].retval = retval;
+  klock_status_t status = klock_lock(&process_table_lock);
+  sleepq_wake (&process_table[pid].state);
+  klock_open(status, &process_table_lock);
   vm_destroy_pagetable(thr->pagetable);
   thr->pagetable = NULL;
   thread_finish();
