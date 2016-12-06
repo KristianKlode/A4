@@ -1,0 +1,136 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+heap                0x100             lib.x86_64.o
+free_list           0x8               lib.x86_64.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+                0xffff800000000000                . = 0xffff800000000000
+
+ro_segment      0xffff800000000000     0x278c
+ *(.text .rodata .rodata.*)
+ .text          0xffff800000000000       0x1a x86_64/crt.x86_64.o
+                0xffff800000000000                _start
+                0xffff800000000018                __main
+                0xffff800000000019                __stack_chk_fail
+ .text          0xffff80000000001a        0x3 x86_64/_syscall.x86_64.o
+                0xffff80000000001a                _syscall
+ *fill*         0xffff80000000001d        0x3 
+ .text          0xffff800000000020     0x2554 lib.x86_64.o
+                0xffff800000000c90                syscall_halt
+                0xffff800000000cb0                syscall_getpid
+                0xffff800000000cd0                syscall_spawn
+                0xffff800000000d00                syscall_exit
+                0xffff800000000d20                syscall_join
+                0xffff800000000d50                syscall_fork
+                0xffff800000000d80                syscall_memlimit
+                0xffff800000000da0                syscall_sem_open
+                0xffff800000000dc0                syscall_sem_close
+                0xffff800000000df0                syscall_sem_p
+                0xffff800000000e20                syscall_sem_v
+                0xffff800000000e50                syscall_open
+                0xffff800000000e80                syscall_close
+                0xffff800000000eb0                syscall_read
+                0xffff800000000ee0                syscall_write
+                0xffff800000000f10                syscall_seek
+                0xffff800000000f40                syscall_create
+                0xffff800000000f70                syscall_delete
+                0xffff800000000fa0                syscall_filecount
+                0xffff800000000fd0                syscall_file
+                0xffff800000001000                strlen
+                0xffff800000001020                strcpy
+                0xffff800000001050                strncpy
+                0xffff800000001090                strcat
+                0xffff8000000010e0                strncat
+                0xffff800000001150                strcmp
+                0xffff8000000011a0                strncmp
+                0xffff8000000011f0                memcmp
+                0xffff800000001240                strstr
+                0xffff8000000012b0                memset
+                0xffff8000000012d0                memcpy
+                0xffff800000001300                putc
+                0xffff800000001330                puts
+                0xffff800000001370                getc_raw
+                0xffff8000000013a0                getc
+                0xffff8000000013f0                gets
+                0xffff800000001490                readline_static
+                0xffff8000000015b0                readline
+                0xffff800000001e30                printf
+                0xffff800000001ee0                snprintf
+                0xffff800000001f80                heap_init
+                0xffff800000001fb0                malloc
+                0xffff800000002080                free
+                0xffff800000002130                calloc
+                0xffff800000002210                realloc
+                0xffff800000002520                atoi
+ *fill*         0xffff800000002574        0xc 
+ .rodata        0xffff800000002580      0x200 lib.x86_64.o
+ .text          0xffff800000002780        0x6 proc.x86_64.o
+                0xffff800000002780                child
+ .rodata.str1.1
+                0xffff800000002786        0x6 proc.x86_64.o
+
+.iplt           0xffff800000002790        0x0
+ .iplt          0xffff800000002790        0x0 x86_64/crt.x86_64.o
+
+.text.unlikely  0xffff80000000278c        0x0
+ .text.unlikely
+                0xffff80000000278c        0x0 lib.x86_64.o
+ .text.unlikely
+                0xffff80000000278c        0x0 proc.x86_64.o
+
+.text.startup   0xffff800000002790       0x3c
+ .text.startup  0xffff800000002790       0x3c proc.x86_64.o
+                0xffff800000002790                main
+
+.eh_frame       0xffff8000000027d0      0x5f8
+ .eh_frame      0xffff8000000027d0      0x5c8 lib.x86_64.o
+                                        0x560 (size before relaxing)
+ .eh_frame      0xffff800000002d98       0x30 proc.x86_64.o
+                                         0x48 (size before relaxing)
+
+.igot.plt       0xffff800000002dc8        0x0
+ .igot.plt      0xffff800000002dc8        0x0 x86_64/crt.x86_64.o
+
+.rela.dyn       0xffff800000002dc8        0x0
+ .rela.iplt     0xffff800000002dc8        0x0 x86_64/crt.x86_64.o
+ .rela.text     0xffff800000002dc8        0x0 x86_64/crt.x86_64.o
+
+rw_segment      0xffff800000003000      0x108
+ *(.data .bss COMMON)
+ .data          0xffff800000003000        0x0 x86_64/crt.x86_64.o
+ .bss           0xffff800000003000        0x0 x86_64/crt.x86_64.o
+ .data          0xffff800000003000        0x0 x86_64/_syscall.x86_64.o
+ .bss           0xffff800000003000        0x0 x86_64/_syscall.x86_64.o
+ .data          0xffff800000003000        0x0 lib.x86_64.o
+ .bss           0xffff800000003000        0x0 lib.x86_64.o
+ COMMON         0xffff800000003000      0x108 lib.x86_64.o
+                0xffff800000003000                heap
+                0xffff800000003100                free_list
+ .data          0xffff800000003108        0x0 proc.x86_64.o
+ .bss           0xffff800000003108        0x0 proc.x86_64.o
+                0xffff800000003108                BINARY_ENDS_HERE = .
+LOAD x86_64/crt.x86_64.o
+LOAD x86_64/_syscall.x86_64.o
+LOAD lib.x86_64.o
+LOAD proc.x86_64.o
+OUTPUT(proc.x86_64 elf64-x86-64)
+
+.comment        0x0000000000000000       0x34
+ .comment       0x0000000000000000       0x34 lib.x86_64.o
+                                         0x35 (size before relaxing)
+ .comment       0x0000000000000034       0x35 proc.x86_64.o
+
+.note.GNU-stack
+                0x0000000000000000        0x0
+ .note.GNU-stack
+                0x0000000000000000        0x0 lib.x86_64.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 proc.x86_64.o
