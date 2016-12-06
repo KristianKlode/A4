@@ -23,7 +23,6 @@ typedef struct {
   char path[256];
   enum process_state state;
   uint64_t retval;
-  klock_status_t lock;
 } pcb_t;
 
 /// Initialize process table.
