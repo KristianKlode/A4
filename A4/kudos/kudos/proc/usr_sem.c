@@ -14,6 +14,7 @@
 #include "kernel/sleepq.h"
 #include "vm/memory.h"
 #include "kernel/klock.h"
+#include "proc/usr_sem.h"
 
 #include "drivers/device.h"     // device_*
 #include "drivers/gcd.h"        // gcd_*
@@ -21,7 +22,7 @@
 #include "proc/syscall.h"       // FD_*, IO_*
 
 
-usr_sem_t process_table[USR_SEM_MAX_SEMS];
+usr_sem_t usr_sem_table[USR_SEM_MAX_SEMS];
 klock_t usr_sem_table_lock;
 
 /// Initialize process table and locks.
@@ -39,14 +40,14 @@ void usr_sem_init() {
 
 usr_sem_t* usr_sem_open(const char* name, int value){
     if (value < 0){
-      for (i = 0; i < USR_SEM_MAX_SEMS; ++i) {
+      for ( int i = 0; i < USR_SEM_MAX_SEMS; ++i) {
         if(usr_sem_table[i].name == ""){
           return &usr_sem_table[i];
         }
-      return NULL
+      return NULL;
       }
     }
-    for (i = 0; i < USR_SEM_MAX_SEMS; ++i) {
+    for (int i = 0; i < USR_SEM_MAX_SEMS; ++i) {
       if(usr_sem_table[i].name == ""){
         klock_status_t status = klock_lock(&usr_sem_table_lock);
         usr_sem_table[i].value = value;
@@ -57,12 +58,12 @@ usr_sem_t* usr_sem_open(const char* name, int value){
         return &usr_sem_table[i];
       }
     }
-  }
 }
+
 
 int usr_sem_close(usr_sem_t* sem){
   if (value != maxvalue){
-    return(-1)
+    return(-1);
   }
   klock_init(&usr_sem_table[i].klock);
   klock_status_t status = klock_lock(&usr_sem_table_lock);
@@ -92,5 +93,3 @@ int usr_sem_v(usr_sem_t* sem){
   SYSCALL_SEM_V(sem->ksem);
   return 0;
 }
-
-
