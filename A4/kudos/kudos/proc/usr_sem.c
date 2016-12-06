@@ -15,6 +15,7 @@
 #include "vm/memory.h"
 #include "kernel/klock.h"
 #include "proc/usr_sem.h"
+#include "proc/semaphores.h"
 
 #include "drivers/device.h"     // device_*
 #include "drivers/gcd.h"        // gcd_*
@@ -53,7 +54,7 @@ usr_sem_t* usr_sem_open(const char* name, int value){
         usr_sem_table[i].value = value;
         usr_sem_table[i].maxvalue = value;
         usr_sem_table[i].name = name;
-        usr_sem_table[i].ksem = SYSCALL_SEM_OPEN(value);
+        usr_sem_table[i].ksem = semaphore_create(value);
         klock_open(status, &usr_sem_table_lock);
         return &usr_sem_table[i];
       }
@@ -67,7 +68,7 @@ int usr_sem_close(usr_sem_t* sem){
   }
   klock_init(&usr_sem_table[i].klock);
   klock_status_t status = klock_lock(&usr_sem_table_lock);
-  SYSCALL_SEM_CLOSE(sem->ksem);
+  semaphore_destroy(sem->ksem);
   sem->value = -1;
   sem->maxvalue = -1;
   sem->name = "";
@@ -81,7 +82,7 @@ int usr_sem_p(usr_sem_t* sem){
     return -2;
   }
   sem->value = sem->value -1;
-  SYSCALL_SEM_P(sem->ksem);
+  semaphore_P(sem->ksem);
   return 0;
 }
 
@@ -90,6 +91,6 @@ int usr_sem_v(usr_sem_t* sem){
     return -3;
   }
   sem->value = sem->value +1;
-  SYSCALL_SEM_V(sem->ksem);
+  semaphore_V(sem->ksem);
   return 0;
 }
