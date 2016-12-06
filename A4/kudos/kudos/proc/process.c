@@ -279,6 +279,8 @@ int process_write(int filehandle, const void *buffer, int length) {
 /// Stop the current process and the kernel thread in which it runs
 /// Argument: return value
 void process_exit(int retval);{
+  thread_table_t* thr;
+  thr = thread_get_current_thread_entry();
   pid_t pid = process_get_current_process();
   process_table[pid].state = PROCESS_ZOMBIE;
   process_table[pid].retval = retval;
