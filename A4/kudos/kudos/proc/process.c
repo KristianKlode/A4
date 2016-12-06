@@ -48,7 +48,7 @@ pid_t alloc_process_id() {
 
   st = klock_lock(&process_table_lock);
   for (i = 0; i < PROCESS_MAX_PROCESSES; ++i) {
-    if ((process_table[i].pid == -1) and (process_table[i].state == PROCESS_FREE)) {
+    if ((process_table[i].pid == -1) && (process_table[i].state == PROCESS_FREE)) {
       memoryset(&process_table[i], 0, sizeof(pcb_t));
       process_table[i].pid = i;
       process_table[i].state = PROCESS_RUNNING;
@@ -275,10 +275,10 @@ int process_write(int filehandle, const void *buffer, int length) {
   }
 
   return retval;
-
+}
 /// Stop the current process and the kernel thread in which it runs
 /// Argument: return value
-void process_exit(int retval);{
+void process_exit(int retval){
   thread_table_t* thr;
   thr = thread_get_current_thread_entry();
   pid_t pid = process_get_current_process();
@@ -295,7 +295,7 @@ int process_join(pid_t pid){
         int retval;
         while (process_table[pid].state != PROCESS_ZOMBIE){
           klock_status_t status = klock_lock(&process_table_lock);
-          sleepq_add(process_table[pid].lock);
+          sleepq_add(&process_table[pid].state);
           klock_open(status, &process_table_lock);
           thread_switch();
         }
