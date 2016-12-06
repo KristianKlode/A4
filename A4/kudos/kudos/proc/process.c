@@ -302,5 +302,6 @@ int process_join(process_id_t pid){
         process_table[i].state = PROCESS_FREE;
         process_table[i].pid = -1;
         klock_open(status, &process_table_lock);
+        return retval
 }
 
