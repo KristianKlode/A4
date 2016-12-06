@@ -24,8 +24,8 @@
 #include "proc/syscall.h"       // FD_*, IO_*
 
 
-usr_sem_t usr_sem_table[USR_SEM_MAX_SEMS];
-klock_t usr_sem_table_lock;
+static usr_sem_t usr_sem_table[USR_SEM_MAX_SEMS];
+static klock_t usr_sem_table_lock;
 
 /// Initialize process table and locks.
 void usr_sem_init() {
@@ -36,7 +36,7 @@ void usr_sem_init() {
     usr_sem_table[i].value = -1;
     usr_sem_table[i].maxvalue = -1;
     usr_sem_table[i].name = "";
-    ///usr_sem_table[i].ksem = ;
+    usr_sem_table[i].ksem = -1;
   }
 }
 
@@ -79,19 +79,27 @@ int usr_sem_close(usr_sem_t* sem){
 }
 
 int usr_sem_p(usr_sem_t* sem){
-  if(sem->value<1){
+  klock_status_t status = klock_lock(&usr_sem_table_lock);
+  //The page fault is below this point.
+  if(sem->value < 1){
+    klock_open(status, &usr_sem_table_lock);
     return -2;
   }
-  sem->value = sem->value -1;
+  //The page fault is above this point.
+  sem->value--;
   semaphore_P(sem->ksem);
+  klock_open(status, &usr_sem_table_lock);
   return 0;
 }
 
 int usr_sem_v(usr_sem_t* sem){
+  klock_status_t status = klock_lock(&usr_sem_table_lock);
   if(sem->value > (sem->maxvalue-1)){
+    klock_open(status, &usr_sem_table_lock);
     return -3;
   }
-  sem->value = sem->value +1;
+  sem->value++;
   semaphore_V(sem->ksem);
+  klock_open(status, &usr_sem_table_lock);
   return 0;
 }
