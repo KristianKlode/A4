@@ -14,7 +14,7 @@ Linker script and memory map
 
                 0xffff800000000000                . = 0xffff800000000000
 
-ro_segment      0xffff800000000000     0x278c
+ro_segment      0xffff800000000000     0x2791
  *(.text .rodata .rodata.*)
  .text          0xffff800000000000       0x1a x86_64/crt.x86_64.o
                 0xffff800000000000                _start
@@ -72,36 +72,35 @@ ro_segment      0xffff800000000000     0x278c
                 0xffff800000002520                atoi
  *fill*         0xffff800000002574        0xc 
  .rodata        0xffff800000002580      0x200 lib.x86_64.o
- .text          0xffff800000002780        0x6 proc.x86_64.o
-                0xffff800000002780                child
+ .text          0xffff800000002780        0x0 proc.x86_64.o
  .rodata.str1.1
-                0xffff800000002786        0x6 proc.x86_64.o
+                0xffff800000002780       0x11 proc.x86_64.o
 
-.iplt           0xffff800000002790        0x0
- .iplt          0xffff800000002790        0x0 x86_64/crt.x86_64.o
+.iplt           0xffff8000000027a0        0x0
+ .iplt          0xffff8000000027a0        0x0 x86_64/crt.x86_64.o
 
-.text.unlikely  0xffff80000000278c        0x0
+.text.unlikely  0xffff800000002791        0x0
  .text.unlikely
-                0xffff80000000278c        0x0 lib.x86_64.o
+                0xffff800000002791        0x0 lib.x86_64.o
  .text.unlikely
-                0xffff80000000278c        0x0 proc.x86_64.o
+                0xffff800000002791        0x0 proc.x86_64.o
 
-.text.startup   0xffff800000002790       0x3c
- .text.startup  0xffff800000002790       0x3c proc.x86_64.o
-                0xffff800000002790                main
+.text.startup   0xffff8000000027a0       0x4e
+ .text.startup  0xffff8000000027a0       0x4e proc.x86_64.o
+                0xffff8000000027a0                main
 
-.eh_frame       0xffff8000000027d0      0x5f8
- .eh_frame      0xffff8000000027d0      0x5c8 lib.x86_64.o
+.eh_frame       0xffff8000000027f0      0x5e0
+ .eh_frame      0xffff8000000027f0      0x5c8 lib.x86_64.o
                                         0x560 (size before relaxing)
- .eh_frame      0xffff800000002d98       0x30 proc.x86_64.o
-                                         0x48 (size before relaxing)
+ .eh_frame      0xffff800000002db8       0x18 proc.x86_64.o
+                                         0x30 (size before relaxing)
 
-.igot.plt       0xffff800000002dc8        0x0
- .igot.plt      0xffff800000002dc8        0x0 x86_64/crt.x86_64.o
+.igot.plt       0xffff800000002dd0        0x0
+ .igot.plt      0xffff800000002dd0        0x0 x86_64/crt.x86_64.o
 
-.rela.dyn       0xffff800000002dc8        0x0
- .rela.iplt     0xffff800000002dc8        0x0 x86_64/crt.x86_64.o
- .rela.text     0xffff800000002dc8        0x0 x86_64/crt.x86_64.o
+.rela.dyn       0xffff800000002dd0        0x0
+ .rela.iplt     0xffff800000002dd0        0x0 x86_64/crt.x86_64.o
+ .rela.text     0xffff800000002dd0        0x0 x86_64/crt.x86_64.o
 
 rw_segment      0xffff800000003000      0x108
  *(.data .bss COMMON)
