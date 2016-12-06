@@ -48,7 +48,7 @@ pid_t alloc_process_id() {
 
   st = klock_lock(&process_table_lock);
   for (i = 0; i < PROCESS_MAX_PROCESSES; ++i) {
-    if (process_table[i].pid == -1 and process_table[i].state == PROCESS_FREE) {
+    if ((process_table[i].pid == -1) and (process_table[i].state == PROCESS_FREE)) {
       memoryset(&process_table[i], 0, sizeof(pcb_t));
       process_table[i].pid = i;
       process_table[i].state = PROCESS_RUNNING;
@@ -293,17 +293,16 @@ void process_exit(int retval);{
 /// and mark the process-table entry as free
 int process_join(pid_t pid){
         int retval;
-        while (process_table[i].state != PROCESS_ZOMBIE){
-          status = klock_lock(&process_table_lock);
-          sleepq_add(thread_table[i]);
+        while (process_table[pid].state != PROCESS_ZOMBIE){
+          klock_status_t status = klock_lock(&process_table_lock);
+          sleepq_add(process_table[pid].lock);
           klock_open(status, &process_table_lock);
           thread_switch();
-          status = klock_lock(&process_table_lock);
         }
-        retval = process_table[i].retval;
-        process_table[i].state = PROCESS_FREE;
-        process_table[i].pid = -1;
+        retval = process_table[pid].retval;
+        process_table[pid].state = PROCESS_FREE;
+        process_table[pid].pid = -1;
+        klock_status_t status = klock_lock(&process_table_lock);
         klock_open(status, &process_table_lock);
-        return retval
+        return retval;
 }
-

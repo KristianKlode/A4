@@ -43,6 +43,6 @@ pid_t process_spawn(char const* executable, int flags);
 void process_exit(int retval);
 /// Wait for the given process to terminate, return its return value,
 /// and mark the process-table entry as free
-int process_join(process_id_t pid);
+int process_join(pid_t pid);
 
 #endif // KUDOS_PROC_PROCESS_H
