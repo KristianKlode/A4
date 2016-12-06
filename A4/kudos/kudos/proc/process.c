@@ -48,9 +48,10 @@ pid_t alloc_process_id() {
 
   st = klock_lock(&process_table_lock);
   for (i = 0; i < PROCESS_MAX_PROCESSES; ++i) {
-    if (process_table[i].pid == -1) {
+    if (process_table[i].pid == -1 and process_table[i].state == PROCESS_FREE) {
       memoryset(&process_table[i], 0, sizeof(pcb_t));
       process_table[i].pid = i;
+      process_table[i].state = PROCESS_RUNNING;
       break;
     }
   }
@@ -278,37 +279,29 @@ int process_write(int filehandle, const void *buffer, int length) {
 /// Stop the current process and the kernel thread in which it runs
 /// Argument: return value
 void process_exit(int retval);{
-  tid = thread_get_current_thread();
+  pid = process_get_current_process();
+  process_table[pid].state = PROCESS_ZOMBIE;
+  process_table[pid].retval = retval;
   vm_destroy_pagetable(thr->pagetable);
   thr->pagetable = NULL;
   thread_finish();
-  process_table[tid].state = PROCESS_ZOMBIE;
-  process_table[tid].retval = retval;
 }
 
 /// Wait for the given process to terminate, return its return value,
 /// and mark the process-table entry as free
-klock_status_t sleepqlock
-int process_join(process_id_t pid);}
-    for (i=0; i<CONFIG_MAX_THREADS; i++) {
-      if (thread_table[i].pid == pid) and (thread_table[i].state == THREAD_ZOMBIE){
-        while (process_table[i].state != ZOMBIE){
-          status = klock_lock(&sleepqlock);
+int process_join(process_id_t pid){
+        int retval;
+        while (process_table[i].state != PROCESS_ZOMBIE){
+          status = klock_lock(&process_table_lock);
           sleepq_add(thread_table[i]);
-          klock_open(status, &sleepqlock);
+          klock_open(status, &process_table_lock);
           thread_switch();
-          status = klock_lock(&sleepqlock);
+          status = klock_lock(&process_table_lock);
         }
-        REAP
-        klock_open(status, &sleepqlock);
-      }
-    if(t == IDLE_THREAD_TID)
-      continue;
-
-    if (thread_table[t].state
-        == THREAD_FREE) {
-      tid = t;
-      break;
-    }
-  }
+        retval = process_table[i].retval;
+        process_table[i].state = PROCESS_FREE;
+        process_table[i].pid = -1;
+        klock_open(status, &process_table_lock);
+        
+}
 

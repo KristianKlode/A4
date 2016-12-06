@@ -15,6 +15,8 @@
 
 typedef int pid_t;
 
+enum process_state {PROCESS_FREE, PROCESS_RUNNING, PROCESS_ZOMBIE};
+
 typedef struct {
   pid_t pid;
   char path[256];
