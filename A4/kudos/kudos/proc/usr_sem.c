@@ -15,7 +15,7 @@
 #include "vm/memory.h"
 #include "kernel/klock.h"
 #include "proc/usr_sem.h"
-#include "proc/semaphores.h"
+#include "kernel/semaphore.h"
 
 #include "drivers/device.h"     // device_*
 #include "drivers/gcd.h"        // gcd_*
@@ -42,14 +42,14 @@ void usr_sem_init() {
 usr_sem_t* usr_sem_open(const char* name, int value){
     if (value < 0){
       for ( int i = 0; i < USR_SEM_MAX_SEMS; ++i) {
-        if(usr_sem_table[i].name == ""){
+        if(strcmp(0,usr_sem_table[i].name)){
           return &usr_sem_table[i];
         }
       return NULL;
       }
     }
     for (int i = 0; i < USR_SEM_MAX_SEMS; ++i) {
-      if(usr_sem_table[i].name == ""){
+      if(strcmp(0,usr_sem_table[i].name)){
         klock_status_t status = klock_lock(&usr_sem_table_lock);
         usr_sem_table[i].value = value;
         usr_sem_table[i].maxvalue = value;
@@ -63,7 +63,7 @@ usr_sem_t* usr_sem_open(const char* name, int value){
 
 
 int usr_sem_close(usr_sem_t* sem){
-  if (value != maxvalue){
+  if (sem->value != sem->maxvalue){
     return(-1);
   }
   klock_init(&usr_sem_table[i].klock);

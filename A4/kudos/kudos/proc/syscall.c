@@ -8,6 +8,7 @@
 #include "kernel/assert.h"
 #include "vm/memory.h"
 #include "proc/process.h"
+#include "proc/usr_sem.h"
 
 /// Handle system calls. Interrupts are enabled when this function is
 /// called.
@@ -47,12 +48,16 @@ uintptr_t syscall_entry(uintptr_t syscall,
     return process_join((pid_t) arg0);
     break;
   case SYSCALL_SEM_OPEN:
+    usr_sem_init();
     break;
   case SYSCALL_SEM_CLOSE:
+    usr_sem_close((usr_sem_t*) arg0);
     break;
   case SYSCALL_SEM_P:
+    usr_sem_p((usr_sem_t*) arg0);
     break;
   case SYSCALL_SEM_V:
+    usr_sem_v((usr_sem_t*) arg0);
     break;
   default:
     kprintf("SYSCALL %x\n", syscall);
