@@ -279,7 +279,7 @@ int process_write(int filehandle, const void *buffer, int length) {
 /// Stop the current process and the kernel thread in which it runs
 /// Argument: return value
 void process_exit(int retval);{
-  pid = process_get_current_process();
+  pid_t pid = process_get_current_process();
   process_table[pid].state = PROCESS_ZOMBIE;
   process_table[pid].retval = retval;
   vm_destroy_pagetable(thr->pagetable);
@@ -289,7 +289,7 @@ void process_exit(int retval);{
 
 /// Wait for the given process to terminate, return its return value,
 /// and mark the process-table entry as free
-int process_join(process_id_t pid){
+int process_join(pid_t pid){
         int retval;
         while (process_table[i].state != PROCESS_ZOMBIE){
           status = klock_lock(&process_table_lock);
