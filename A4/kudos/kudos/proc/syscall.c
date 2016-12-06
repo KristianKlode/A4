@@ -44,7 +44,7 @@ uintptr_t syscall_entry(uintptr_t syscall,
     process_exit((int) arg0);
     break;
   case SYSCALL_JOIN:
-    return process_join((pid_t) arg);
+    return process_join((pid_t) arg0);
     break;
   default:
     kprintf("SYSCALL %x\n", syscall);
