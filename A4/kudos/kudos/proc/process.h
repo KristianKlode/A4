@@ -18,6 +18,8 @@ typedef int pid_t;
 typedef struct {
   pid_t pid;
   char path[256];
+  enum process_state state;
+  uint64_t retval;
 } pcb_t;
 
 /// Initialize process table.

@@ -274,4 +274,41 @@ int process_write(int filehandle, const void *buffer, int length) {
   }
 
   return retval;
+
+/// Stop the current process and the kernel thread in which it runs
+/// Argument: return value
+void process_exit(int retval);{
+  tid = thread_get_current_thread();
+  vm_destroy_pagetable(thr->pagetable);
+  thr->pagetable = NULL;
+  thread_finish();
+  process_table[tid].state = PROCESS_ZOMBIE;
+  process_table[tid].retval = retval;
 }
+
+/// Wait for the given process to terminate, return its return value,
+/// and mark the process-table entry as free
+klock_status_t sleepqlock
+int process_join(process_id_t pid);}
+    for (i=0; i<CONFIG_MAX_THREADS; i++) {
+      if (thread_table[i].pid == pid) and (thread_table[i].state == THREAD_ZOMBIE){
+        while (process_table[i].state != ZOMBIE){
+          status = klock_lock(&sleepqlock);
+          sleepq_add(thread_table[i]);
+          klock_open(status, &sleepqlock);
+          thread_switch();
+          status = klock_lock(&sleepqlock);
+        }
+        REAP
+        klock_open(status, &sleepqlock);
+      }
+    if(t == IDLE_THREAD_TID)
+      continue;
+
+    if (thread_table[t].state
+        == THREAD_FREE) {
+      tid = t;
+      break;
+    }
+  }
+

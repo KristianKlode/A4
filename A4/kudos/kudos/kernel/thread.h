@@ -19,7 +19,7 @@ typedef enum {
   THREAD_READY,
   THREAD_SLEEPING,
   THREAD_NONREADY,
-  THREAD_DYING
+  THREAD_DYING,
 } thread_state_t;
 
 #define IDLE_THREAD_TID 0
@@ -52,6 +52,9 @@ typedef struct {
 
   /* Internal thread structure */
   _kthread_t thread_data;
+
+  /* Return value */
+  uint64_t retval;
 
 } thread_table_t;
 
